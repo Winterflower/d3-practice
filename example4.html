@@ -1,0 +1,18 @@
+<style>
+  svg rect { fill:red;}
+  svg rect#willBeGreen { fill:green;}
+</style>
+<svg width="720" height="120">
+  <circle cx="40" cy="20" r="10" style="fill:red"></circle>
+  <circle cx="80" cy="40" r="15" style="fill:green"></circle>
+  <circle cx="120" cy="60" r="20" style="fill:blue"></circle>
+  <ellipse cx="200" cy="100" rx="40" ry="15"/>
+  <rect x="10" y="10" width="50" height="50"/>
+  <rect x="70" y="10" width="50" height="50" id="willBeGreen"/>
+  <rect x="130" y="10" width="50" height="50" style="fill:blue"/>
+  <line x1="10" y1="20" x2="110" y2="120" stroke="red" stroke-width="5" stroke-dasharray="5,5"/>
+</svg>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script>
+  d3.selectAll('circle').style('fill', 'teal');
+</script>

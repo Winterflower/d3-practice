@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta name="description" content="D3 examples">
+  <title>Example 2</title>
+</head>
+
+<body>
+  <!--<div id='div1'>A</div>
+  <div id='div2'>B</div>
+  <div id='div3'>C</div>
+  <div id='div4'>D</div> -->
+  <button onclick='render([5,15])'>Take action! </button>
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script>
+  //select div tags that are children of body
+
+    function render(dataToRender) {
+      console.log("executing render function");
+      var selector = d3.select('body')
+                        .selectAll('div')
+                        .data(dataToRender);
+      var entering = selector.enter(); //represents the new items to be created
+      entering.append('div')
+              .text( function(d) { return d;});
+      console.log("the value of entering");
+      console.log(entering);
+      selector.text(function(d){ return d;});
+      var exiting = selector.exit();
+      console.log("exiting values");
+      console.log(exiting);
+      exiting.remove()
+
+    }
+    render([10,20,30]);
+  </script>
+</body>
+</html>
