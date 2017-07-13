@@ -1,0 +1,112 @@
+<!-- D3 JS by example - s catter and bubble plots-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="description" content="D3 examples"/>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script>
+        var url = "https://gist.githubusercontent.com/d3byex/520e6dcb30e673c149cc/raw/432623f00f6740021bdc13141612ac0b6196b022/corr_aapl_msft.csv";
+        d3.csv( url, function(error, rawData){
+          var data = rawData.map(function(d){
+            return { X: +d.AAPL, Y: +d.MSFT }
+          });
+          var xExtents = d3.extent(data, function(d) { return d.X;});
+          console.log("xExtents");
+          console.log(xExtents);
+          var yExtent = d3.extent(data, function(d){ return d.Y });
+          console.log(yExtent);
+          var maxExtent = d3.max(
+            xExtents.concat(yExtent),
+            function(d) { return Math.abs(d);}
+          );
+          var graphWidth = 400, graphHeight = 400;
+          var radius = 5;
+          var margin = {left: 50, top:50, right: 50, bottom:50};
+          var axisPadding = 3;
+          var totalHeight = graphHeight + margin.top + margin.bottom;
+          var totalWidth = graphWidth + margin.right + margin.left;
+          var scale = d3.scale.linear()
+                        .domain([-maxExtent, maxExtent])
+                        .range([0, graphWidth]);
+          var svg = d3.select('body')
+                      .append('svg')
+                      .attr('width', totalWidth)
+                      .attr('height', totalHeight);
+
+          var yGridlinesAxis = d3.svg.axis().scale(scale).orient("left");
+          var yGridlineNodes = svg.append('g')
+                                   .attr('transform', 'translate(' + (margin.left + graphWidth)
+                                 + ',' + margin.top+ ')')
+                                 .call(yGridlinesAxis.tickSize(graphWidth +axisPadding,0,0).tickFormat("")
+                               );
+          styleGridlineNodes(yGridlineNodes);
+
+          var xGridlinesAxis = d3.svg.axis().scale(scale).orient("bottom");
+          var xGridlinesNodes = svg.append("g")
+                                   .attr('transform', 'translate('+margin.left +',' + (totalHeight -margin.bottom +axisPadding) +')')
+                                   .call(xGridlinesAxis.tickSize(-graphWidth-axisPadding, 0,0).tickFormat(""));
+          styleGridlineNodes(xGridlinesNodes);
+
+
+          var xAxis = d3.svg.axis().scale(scale).orient("bottom");
+          var yAxis = d3.svg.axis().scale(scale).orient("left");
+
+          var yAxisNodes = svg.append('g')
+                              .attr('transform', 'translate(' + (margin.left-axisPadding) +',' + margin.top + ')')
+                              .call(yAxis);
+          styleAxisNodes(yAxisNodes);
+
+          var xAxisNodes = svg.append('g')
+                              .attr('transform', 'translate('+margin.left + ',' + (totalHeight-margin.bottom + axisPadding)+ ')')
+                              .call(xAxis);
+          styleAxisNodes(xAxisNodes);
+
+          var graphGroup = svg.append('g')
+                              .attr('transform', 'translate(' + margin.left + ',' +margin.top + ')');
+          graphGroup.selectAll('circle')
+                    .data(data)
+                    .enter()
+                    .append('circle')
+                    .attr({
+                      cx: function (d) { return scale(d.X);},
+                      cy: function (d) { return scale(d.Y);},
+                      r: radius,
+                      fill: 'none',
+                      stroke: 'steelblue'
+                    });
+        });
+
+        function styleGridlineNodes(axisNodes){
+          axisNodes.selectAll('.domain')
+                    .attr({
+                      fill : 'none',
+                      stroke: 'none'
+                    });
+          axisNodes.selectAll('.tick line')
+                    .attr({
+                      fill: 'none',
+                      'stroke-width' : 1,
+                      stroke: 'lightgray'
+                    });
+        }
+
+        function styleAxisNodes(axisNodes){
+          axisNodes.selectAll('.domain')
+                  .attr({
+                    fill: 'none',
+                    'stroke-width':1,
+                    stroke: 'black'
+                  });
+          axisNodes.selectAll('.tick line')
+                    .attr({
+                      fill: 'none',
+                      'stroke-width':1,
+                      stroke: 'black'
+                    });
+        }
+    </script>
+  </body>
+</html>
